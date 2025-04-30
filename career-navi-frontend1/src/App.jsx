@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Milestone from "./pages/Milestone";
 import Test from "./pages/Test";
 import Analytics from "./pages/Analytics";
-import Chat from "./pages/Chat";
+import Chat from "./pages/chat";
 import MyPageDetail from "./pages/MyPageDetail";
 import JobLinks from "./pages/JobLinks";
 import Diagnosis from "./pages/Diagnosis";
