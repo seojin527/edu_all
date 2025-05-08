@@ -27,12 +27,17 @@ function Home() {
             ))}
           </nav>
         </div>
+        <div className="text-center text-white text-sm sm:text-base mt-2 px-4 py-3 border-t border-white/30 bg-purple-700/60 rounded-lg shadow-inner">
+  🚧 현재 이 사이트는 <span className="font-bold underline">MVP 버전</span>으로,<br className="sm:hidden" />
+  지속적으로 <span className="font-bold underline">개발 및 개선</span> 중입니다.
+</div>
         <div className="mt-10 bg-purple-700 p-4 rounded-lg text-center">
           <p className="text-sm mb-2">진로 탐색 프로그램</p>
           <button className="bg-white text-purple-700 px-4 py-2 rounded-full text-sm font-bold hover:bg-gray-100 transition">
             TRY NOW
           </button>
         </div>
+
       </aside>
 
       {/* 메인 컨텐츠 */}

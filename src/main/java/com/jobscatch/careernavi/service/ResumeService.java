@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +47,12 @@ public class ResumeService {
                 .bodyToMono(Map.class)
                 .block();
 
-        String edited = (String) ((Map) ((java.util.List) responseMap.get("choices")).get(0)).get("message").get("content");
-
-        return new ResumeResponse(request.getText(), edited.trim(), "AI 첨삭 결과입니다.");
+                List<Map<String, Object>> choices = (List<Map<String, Object>>) responseMap.get("choices");
+                Map<String, Object> choice = choices.get(0);
+                Map<String, Object> message = (Map<String, Object>) choice.get("message");
+                String edited = (String) message.get("content");
+                
+                return new ResumeResponse(request.getText(), edited.trim(), "AI 첨삭 결과입니다.");
+                
     }
 }
