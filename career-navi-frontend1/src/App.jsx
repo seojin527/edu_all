@@ -12,6 +12,13 @@ import CareerDictionary from "./pages/CareerDictionary";
 import SearchPage from "./pages/SearchPage";
 import CalendarPage from "./pages/CalendarPage"; 
 
+import SelfIntroTest from "./pages/SelfIntroTest"; // 경로 확인 필요
+import InterestTest from "./pages/InterestTest";   // 예시
+import PersonalityTest from "./pages/PersonalityTest"; // 예시
+
+
+
+
 function App() {
   return (
     <Routes>
@@ -27,6 +34,10 @@ function App() {
       <Route path="/dictionary" element={<CareerDictionary />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/calendar" element={<CalendarPage />} /> 
+
+        <Route path="/test/selfintro" element={<SelfIntroTest />} />
+        <Route path="/interest" element={<InterestTest />} />
+        <Route path="/personality" element={<PersonalityTest />} />
     </Routes>
   );
 }

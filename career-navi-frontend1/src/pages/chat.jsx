@@ -1,24 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Chat() {
-  const [messages, setMessages] = useState([
-    { type: "bot", text: "안녕하세요! 어떤 진로에 관심이 있으신가요?" },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
-    if (!input.trim()) return;
-    const userMessage = { type: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+  // ✅ 1. 이전 대화 불러오기
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/chat/messages")
+      .then((res) => {
+        setMessages(res.data);
+        console.log("✅ 초기 메시지 불러오기 완료");
+      })
+      .catch((err) => {
+        console.error("❌ 메시지 불러오기 오류:", err);
+      });
+  }, []);
+
+  // ✅ 2. 메시지 전송
+  const handleSend = async () => {
+    if (!input.trim()) {
+      console.log("⚠️ 빈 입력 - 메시지 전송 안 함");
+      return;
+    }
+
+    const userMessage = {
+      role: "user",
+      message: input,
+    };
+
+    console.log("📤 메시지 전송 시도:", userMessage);
+
     setInput("");
 
-    // TODO: GPT API 연동할 부분
-    setTimeout(() => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/chat/send", userMessage);
+      console.log("✅ GPT 응답 수신:", response.data);
+
+      setMessages(response.data);
+    } catch (error) {
+      console.error("❌ 백엔드 호출 오류:", error);
       setMessages((prev) => [
         ...prev,
-        { type: "bot", text: "좋은 질문이에요! 곧 답변을 드릴게요 :)" },
+        { role: "ai", message: "죄송해요! 답변을 가져오지 못했어요." },
       ]);
-    }, 1000);
+    }
   };
 
   return (
@@ -30,12 +56,12 @@ function Chat() {
           <div
             key={idx}
             className={`max-w-[75%] px-4 py-2 rounded-2xl shadow text-sm whitespace-pre-line ${
-              msg.type === "bot"
+              msg.role === "ai"
                 ? "bg-white text-left text-gray-700 self-start"
                 : "bg-purple-500 text-white self-end ml-auto"
             }`}
           >
-            {msg.text}
+            {msg.message}
           </div>
         ))}
       </div>

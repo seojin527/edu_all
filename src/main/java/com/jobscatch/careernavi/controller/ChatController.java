@@ -16,37 +16,41 @@ import java.util.List;
 public class ChatController {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final OpenAiService openAiService;  // ✅ 추가!
+    private final OpenAiService openAiService;
 
-    // 💬 1. 채팅 메시지 저장 + AI 답변까지
     @PostMapping("/send")
     public List<ChatMessage> sendMessage(@RequestBody ChatMessage userMessage) {
 
-        // 1. 사용자가 보낸 메시지 저장
+        // ✅ 디버깅: 사용자 메시지 확인
+        System.out.println("🟢 사용자 메시지 도착");
+        System.out.println("🟢 role: " + userMessage.getRole());
+        System.out.println("🟢 message: " + userMessage.getMessage());
+
         userMessage.setCreatedAt(getNowTime());
         chatMessageRepository.save(userMessage);
 
-        // 2. AI에게 답변 요청
+        // ✅ 디버깅: GPT 호출 직전
+        System.out.println("💬 GPT 호출 시작");
+
         String aiReply = openAiService.askChatGpt(userMessage.getMessage());
 
-        // 3. AI 답변도 ChatMessage로 저장
+        // ✅ 디버깅: GPT 응답 확인
+        System.out.println("💬 GPT 응답 도착: " + aiReply);
+
         ChatMessage aiMessage = new ChatMessage();
         aiMessage.setRole("ai");
         aiMessage.setMessage(aiReply);
         aiMessage.setCreatedAt(getNowTime());
         chatMessageRepository.save(aiMessage);
 
-        // 4. 저장된 전체 메시지 반환
         return chatMessageRepository.findAll();
     }
 
-    // 💬 2. 모든 채팅 메시지 조회
     @GetMapping("/messages")
     public List<ChatMessage> getAllMessages() {
         return chatMessageRepository.findAll();
     }
 
-    // 현재 시각 포맷팅
     private String getNowTime() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
